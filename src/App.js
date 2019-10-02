@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import axios from 'axios';
+import * as firebase from 'firebase';
+import JokeCard from './JokeCard';
+//import TopJokes from './TopJokes';
 
 class App extends Component {
   constructor(props) {
@@ -14,6 +17,7 @@ class App extends Component {
       topJokes: new Array(5),
       bottomJokes: new Array(5),
       url: "https://icanhazdadjoke.com/",
+      loadIndex: 0,
     }
 
     this._handleReloadClick = this._handleReloadClick.bind(this);
@@ -22,13 +26,14 @@ class App extends Component {
   componentDidMount() {
     this.createJokeList()
     console.log(this.state.jokeList)
-    console.log(this.state.jokeListData)
     //load top and bottom jokes
   }
 
   async createJokeList() {
     const jokes = await this.loadJokes();
-    this.setState({jokeList: jokes})
+    var loadIndex = this.state.loadIndex;
+    loadIndex++
+    this.setState({jokeList: jokes, loadIndex: loadIndex})
     console.log("jokes list state updated")
   }
 
@@ -48,32 +53,25 @@ class App extends Component {
 
   async loadJoke() {
     const joke = await axios.get(this.state.url, { headers: { Accept: "application/json" }})
-    // var jokeMap = new Map();
-    // jokeMap.set(jokeListData.jokeList);
-    // Need some way to add new jokes to the db here, containing id, upVotes, and downVotes.
-    // if (!jokeMap.has(joke.id)) {
-    //   jokeListData.numberOfKnownJokes ++;
-    //   jokeListData.jokeList.push({
-    //     "id": joke.id,
-    //     "upVotes": 0,
-    //     "downVotes": 0,
-    //   })
-    // }
+    const rootRef = firebase.database().ref().child("jokes");
+    const jokeId = joke.data.id;
+
+    rootRef.child(jokeId).once('value', snap => {
+      if (!snap.exists()) {
+        rootRef.update({
+           [jokeId]: {upVotes: 0, downVotes: 0}
+        });
+      }
+    });
+
     return joke.data
   }
 
   async _handleReloadClick() {
     //load a new set of jokeID
-    const jokeListPromise = this.createJokeList();
+    this.setState({jokeList: new Array(this.state.numberOfJokes)})
+    this.createJokeList();
     console.log('load new jokes click handled')
-  }
-
-  _upVote() {
-    console.log("Liked")
-  }
-
-  _downVote() {
-    console.log("Disliked")
   }
 
   render() {
@@ -91,6 +89,7 @@ class App extends Component {
               jokeList={this.state.jokeList}
               upVote={this._upVote}
               downVote={this._downVote}
+              loadIndex={loadIndex}
             />
           </div>
           <div className="top-and-bottom-jokes-container">
@@ -115,18 +114,19 @@ function NewJokesButton(props) {
 
 function JokeList(props) {
   const jokeListCards = props.jokeList.map(jokeData => {
+    const loadKey = jokeData.id; //The page isn't reloading data if there are jokes that stay the same because their keys aren't changing. Need to assign keys with loadIndex from state.
     return(
-      <div className="joke-card">
-        <p>{jokeData.joke}</p>
-        <button id="up-vote" onClick={props.upVote}>Like</button>
-        <button id="down-vote" onClick={props.downVote}>Dislike</button>
-      </div>
+      <JokeCard
+        jokeData={jokeData}
+        key={loadKey}
+      />
     )
   });
 
   return jokeListCards
 }
 
+//These two will be removed later
 function TopJokes(props) {
   return(
     null

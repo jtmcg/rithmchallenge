@@ -16,7 +16,7 @@ export default class BottomJokes extends Component {
 
     getBottomJokes = async () => {
         var bottomJokeListData = [];
-        await firebase.database().ref('jokes').orderByChild('upVotes').limitToFirst(5).once('value', snap => {
+        await firebase.database().ref('jokes').orderByChild('downVotes').limitToLast(5).once('value', snap => {
             snap.forEach(child => {
                 bottomJokeListData.push(child.val())
             });
@@ -28,7 +28,7 @@ export default class BottomJokes extends Component {
         }
 
     render() {
-        const bottomJokeListText = this.state.bottomJokeListData.map((jokeData, idx) => <div>{idx+1}. {jokeData.joke} Down Votes: {jokeData.upVotes}</div>)
+        const bottomJokeListText = this.state.bottomJokeListData.map((jokeData, idx) => <div>{idx+1}. {jokeData.joke} Down Votes: {jokeData.downVotes}</div>)
 
         return(
             <div className="bottom-jokes">

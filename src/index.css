@@ -11,3 +11,85 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.title-bar {
+  width: 80%;
+  padding-left: 10%;
+  background-color: white;
+  position: sticky;
+  top: 0px;
+  z-index: 600;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+#title {
+  margin: 0px;
+}
+
+#reload-button {
+  
+}
+
+.body-container {
+  width: 90%;
+  margin: auto;
+}
+
+.joke-list {
+  display: inline-block;
+  width: 60%;
+}
+
+.joke-card {
+  border: solid black 2px;
+  border-radius: 5px;
+  padding: 1%;
+  margin: 0.5%;
+}
+
+.vote-container {
+  width: 50%;
+  margin: auto;
+  padding: 1%;
+  text-align: center;
+}
+
+.up-votes-container {
+  display: inline-block;
+}
+
+#up-vote {
+  display: inline-block;
+}
+
+#up-vote span {
+  content: "\02713";
+}
+
+.down-votes-container {
+  display: inline-block;
+}
+
+#down-vote {
+  display: inline-block;
+}
+
+.top-and-bottom-jokes-container {
+  display: inline-block;
+  width: 38%;
+  padding: 1%;
+  margin: auto;
+  vertical-align: top;
+  position: fixed;
+}
+
+.bottom-jokes {
+}
+
+.top-jokes {
+
+}
+

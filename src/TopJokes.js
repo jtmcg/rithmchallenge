@@ -1,49 +1,39 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
-import axios from 'axios';
 import * as firebase from 'firebase';
 
 export default class TopJokes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            jokeList: new Array(5),
-            url: "https://icanhazdadjoke.com/j/",
+            topJokeListData: [],
         }
     }
 
     componentDidMount() {
-        const rootRef = firebase.database().ref('jokes');
-        rootRef.orderByChild('upVotes');
-        //This ^^ is sorting the data and nothing more. Need to extract the sorted data for the highest and lowest rated jokes
-        console.log(highestRated)
-        this.createJokeList(highestRated);
+        this.getTopJokes();
     }
 
-    async createJokeList(highestRated) {
-        var jokes = this.state.jokeList;
-        for (let i=0; i<jokes.length; i++) {
-            var loadedJokeData = await this.loadJoke(highestRated[i])
-            jokes[i] = loadedJokeData.joke
-        };
-        jokes = Promise.all(jokes);
-        console.log(jokes)
-        // this.setState({
-        //     jokeList: jokes,
-        // });
-    }
-
-    async loadJoke(id) {
-        const jokeIdURL = this.state.url+id;
-        const loadedJoke = await axios.get(jokeIdURL, { headers: { Accept: "application/json"}});
-        return loadedJoke.data
-    }
+    getTopJokes = async () => {
+        var topJokeListData = [];
+        await firebase.database().ref('jokes').orderByChild('upVotes').limitToLast(5).once('value', snap => {
+            snap.forEach(child => {
+                topJokeListData.push(child.val())
+            });
+        });
+        console.log(topJokeListData)
+        this.setState({
+            topJokeListData: topJokeListData,
+        }, console.log(this.state.topJokeListData));
+        }
 
     render() {
+        const topJokeListText = this.state.topJokeListData.map((jokeData, idx) => <div>{idx+1}. {jokeData.joke} Up Votes: {jokeData.upVotes}</div>)
+
         return(
             <div className="top-jokes">
-                {this.state.jokeList}
+                <h3>Top Rated Jokes</h3>
+                {topJokeListText}
             </div>
         )
     }

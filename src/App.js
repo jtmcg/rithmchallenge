@@ -4,7 +4,9 @@ import './index.css';
 import axios from 'axios';
 import * as firebase from 'firebase';
 import JokeCard from './JokeCard';
-//import TopJokes from './TopJokes';
+import uuid from 'uuid';
+import TopJokes from './TopJokes';
+import BottomJokes from './BottomJokes';
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +27,6 @@ class App extends Component {
 
   componentDidMount() {
     this.createJokeList()
-    console.log(this.state.jokeList)
     //load top and bottom jokes
   }
 
@@ -55,11 +56,12 @@ class App extends Component {
     const joke = await axios.get(this.state.url, { headers: { Accept: "application/json" }})
     const rootRef = firebase.database().ref().child("jokes");
     const jokeId = joke.data.id;
+    const jokeText = joke.data.joke;
 
     rootRef.child(jokeId).once('value', snap => {
       if (!snap.exists()) {
         rootRef.update({
-           [jokeId]: {upVotes: 0, downVotes: 0}
+           [jokeId]: {id: jokeId, joke: jokeText ,upVotes: 0, downVotes: 0}
         });
       }
     });
@@ -77,28 +79,25 @@ class App extends Component {
   render() {
     return(
       <div>
-        <div>
-          <h1>I can haz dad jokes</h1>
-          <NewJokesButton
+        <div className="title-bar">
+          <h1 id="title">I can haz dad jokes</h1>
+          <div id="reload-button">
+            <NewJokesButton
             onClick={this._handleReloadClick}
-          />
+            />
+          </div>
         </div>
-        <div>
-          <div className="main-joke-container">
+        <div className="body-container">
+          <div className="joke-list">
             <JokeList
               jokeList={this.state.jokeList}
               upVote={this._upVote}
               downVote={this._downVote}
-              loadIndex={loadIndex}
             />
           </div>
           <div className="top-and-bottom-jokes-container">
-            <TopJokes
-              topJokes={this.state.topJokes}
-            />
-            <BottomJokes
-              bottomJokes={this.state.bottomJokes}
-            />
+            <TopJokes />
+            <BottomJokes />
           </div>
         </div>
       </div>
@@ -114,29 +113,15 @@ function NewJokesButton(props) {
 
 function JokeList(props) {
   const jokeListCards = props.jokeList.map(jokeData => {
-    const loadKey = jokeData.id; //The page isn't reloading data if there are jokes that stay the same because their keys aren't changing. Need to assign keys with loadIndex from state.
     return(
       <JokeCard
         jokeData={jokeData}
-        key={loadKey}
+        key={uuid()}
       />
     )
   });
 
   return jokeListCards
-}
-
-//These two will be removed later
-function TopJokes(props) {
-  return(
-    null
-  )
-}
-
-function BottomJokes(props) {
-  return(
-    null
-  )
 }
 
 export default App

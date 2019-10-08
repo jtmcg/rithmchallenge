@@ -48,6 +48,7 @@ export default class JokeCard extends Component {
                 jokeData.downVotes++
                 return jokeData
             })
+            this.setState({voted: true});
         } else {
             alert("You may only vote once per joke!")
         }
@@ -58,13 +59,15 @@ export default class JokeCard extends Component {
         return(
             <div className="joke-card">
                 <p>{this.state.joke}</p>
-                <div className="up-votes-container">
-                    <p>Up Votes: {this.state.upVotes}</p>
-                    <button id="up-vote" onClick={this.upVote}>Like</button>
-                </div>
-                <div className="down-votes-container">
-                    <button id="down-vote" onClick={this.downVote}>Dislike</button>
-                    <p>Down Votes: {this.state.downVotes}</p>
+                <div className="vote-container">
+                    <div className="up-votes-container">
+                        Up Votes: {this.state.upVotes}
+                        <button id="up-vote" onClick={this.upVote}><span>Like</span></button>
+                    </div>
+                    <div className="down-votes-container">
+                        <button id="down-vote" onClick={this.downVote}>Dislike</button>
+                        Down Votes: {this.state.downVotes}
+                    </div>
                 </div>
             </div>
         )

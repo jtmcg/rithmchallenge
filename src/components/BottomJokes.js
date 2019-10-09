@@ -27,12 +27,14 @@ export default class BottomJokes extends Component {
         }
 
     render() {
-        const bottomJokeListText = this.state.bottomJokeListData.map((jokeData, idx) => <React.Fragment key={jokeData.id}><div><b>{idx+1}.</b> {jokeData.joke} Down Votes: {jokeData.downVotes}</div></React.Fragment>)
+        const bottomJokeListText = this.state.bottomJokeListData.map((jokeData, idx) => <React.Fragment key={jokeData.id}><div><p id="rated-text"><b>{idx+1}.</b> {jokeData.joke} <b>{'\u2716'}'s: {jokeData.downVotes}</b></p></div></React.Fragment>)
 
         return(
-            <div className="bottom-jokes">
-                <h3>Bottom Rated Jokes</h3>
-                {bottomJokeListText}
+            <div className="rated-jokes-box">
+                <h3>Worst Jokes {'\u2716'}</h3>
+                <div className="bottom-jokes-list">
+                    {bottomJokeListText}
+                </div>
             </div>
         )
     }

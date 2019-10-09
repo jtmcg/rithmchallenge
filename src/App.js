@@ -35,11 +35,19 @@ class App extends Component {
   }
 
   async loadJokes() {
-    //handle API call for jokeID
+    // organize list of jokes from api calls
     var jokes = new Array(this.state.numberOfJokes);
     for (let i=0; i<jokes.length; i++) {
+      //create list of existing joke ids
+      var jokeIds = jokes.map(jokeData => {
+        if (jokeData !== null) {
+          return jokeData.id
+        }
+        return null
+      });
       var newJoke = await this.loadJoke();
-      while(jokes.includes(newJoke)) {
+      //check if the new joke is in the existing joke list. If it is, load a new joke
+      while(jokeIds.includes(newJoke.id)) {
         newJoke = await this.loadJoke();
       }
       jokes[i] = newJoke
@@ -48,11 +56,12 @@ class App extends Component {
   }
 
   async loadJoke() {
+    // load random joke from api
     const joke = await axios.get(this.state.url, { headers: { Accept: "application/json" }})
     const rootRef = firebase.database().ref().child("jokes");
     const jokeId = joke.data.id;
     const jokeText = joke.data.joke;
-
+    // check if joke exists on db. If not, make a new entry
     rootRef.child(jokeId).once('value', snap => {
       if (!snap.exists()) {
         rootRef.update({
@@ -65,7 +74,6 @@ class App extends Component {
   }
 
   _handleReloadClick = () => {
-    //load a new set of jokeID
     this.setState({jokeList: new Array(this.state.numberOfJokes)})
     this.createJokeList();
   }
@@ -75,11 +83,7 @@ class App extends Component {
       <div>
         <div className="title-bar">
           <h1 id="title">I can haz dad jokes</h1>
-          <div id="reload-button">
-            <NewJokesButton
-            onClick={this._handleReloadClick}
-            />
-          </div>
+          <h5>Made by Tyler McGoffin. Source: <a href="www.icanhazdadjoke.com">www.icanhazdadjoke.com</a></h5>
         </div>
         <div className="body-container">
           <div className="joke-list">
@@ -87,9 +91,14 @@ class App extends Component {
               jokeList={this.state.jokeList}
               upVote={this._upVote}
               downVote={this._downVote}
+              numberOfJokes={this.state.numberOfJokes}
+            />
+            <NewJokesButton
+             onClick={this._handleReloadClick}
             />
           </div>
           <div className="top-and-bottom-jokes-container">
+            <h2>Most Rated Jokes</h2>
             <TopJokes />
             <BottomJokes />
           </div>
@@ -108,16 +117,25 @@ function NewJokesButton(props) {
 }
 
 function JokeList(props) {
-  const jokeListCards = props.jokeList.map(jokeData => {
-    return(
-      <JokeCard
-        jokeData={jokeData}
-        key={uuid()}
-      />
-    )
-  });
+  
+  if (props.jokeList[props.numberOfJokes - 1] == null) {
+    return (
+    <div style={{textAlign: "center"}}>
+      <h2>Loading New Jokes...</h2>
+    </div>)
 
-  return jokeListCards
+  } else {
+    const jokeListCards = props.jokeList.map(jokeData => {
+      return(
+        <JokeCard
+          jokeData={jokeData}
+          key={uuid()}
+        />
+      )
+    });
+
+    return jokeListCards
+  }
 }
 
 export default App

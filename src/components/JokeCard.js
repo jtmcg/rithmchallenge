@@ -107,15 +107,16 @@ export default class JokeCard extends Component {
             <div className="joke-card">
                 <div className="joke-text" onClick={this.togglePunchline}>
                     {displayJoke}
+                    <div>
+                        <span style={{color: "limegreen"}}>{'\u2714'}'s: {this.state.upVotes}</span>, <span style={{color: "crimson"}}>{'\u2716'}'s: {this.state.downVotes}</span>
+                    </div>
                 </div>
                 <div className="vote-container">
                     <div className="up-votes-container">
-                        Up Votes: {this.state.upVotes}
                         <button className={upVoteClass} id={upVoteId} onClick={this.upVote}><span>Like </span></button>
                     </div>
                     <div className="down-votes-container">
                         <button className={downVoteClass} id={downVoteId} onClick={this.downVote}><span>Dislike </span></button>
-                        Down Votes: {this.state.downVotes}
                     </div>
                 </div>
             </div>

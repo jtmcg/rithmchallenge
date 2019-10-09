@@ -1,3 +1,9 @@
+Necessary downloads:
+1. react: npm install react
+2. axios: npm install axios --save
+3. firebase: npm install firebase --save
+4. random key generator: npm install uuid --save
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

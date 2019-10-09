@@ -27,14 +27,14 @@ class App extends Component {
     //load top and bottom jokes
   }
 
-  async createJokeList() {
+  createJokeList = async () => {
     const jokes = await this.loadJokes();
     var loadIndex = this.state.loadIndex;
     loadIndex++
     this.setState({jokeList: jokes, loadIndex: loadIndex});
   }
 
-  async loadJokes() {
+  loadJokes = async () => {
     // organize list of jokes from api calls
     var jokes = new Array(this.state.numberOfJokes);
     for (let i=0; i<jokes.length; i++) {
@@ -55,7 +55,7 @@ class App extends Component {
     return jokes
   }
 
-  async loadJoke() {
+  loadJoke = async () => {
     // load random joke from api
     const joke = await axios.get(this.state.url, { headers: { Accept: "application/json" }})
     const rootRef = firebase.database().ref().child("jokes");

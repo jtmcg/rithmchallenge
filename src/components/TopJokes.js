@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './index.css';
+import '../index.css';
 import * as firebase from 'firebase';
 
 export default class TopJokes extends Component {
@@ -21,14 +21,13 @@ export default class TopJokes extends Component {
                 topJokeListData.push(child.val())
             });
         });
-        console.log(topJokeListData)
         this.setState({
-            topJokeListData: topJokeListData,
-        }, console.log(this.state.topJokeListData));
+            topJokeListData: topJokeListData.reverse(),
+        });
         }
 
     render() {
-        const topJokeListText = this.state.topJokeListData.map((jokeData, idx) => <div>{idx+1}. {jokeData.joke} Up Votes: {jokeData.upVotes}</div>)
+        const topJokeListText = this.state.topJokeListData.map((jokeData, idx) => <React.Fragment key={jokeData.id}><div><b>{idx+1}.</b> {jokeData.joke} Up Votes: {jokeData.upVotes}</div></React.Fragment>)
 
         return(
             <div className="top-jokes">

@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import axios from 'axios';
 import * as firebase from 'firebase';
-import JokeCard from './JokeCard';
+import JokeCard from './components/JokeCard';
 import uuid from 'uuid';
-import TopJokes from './TopJokes';
-import BottomJokes from './BottomJokes';
+import TopJokes from './components/TopJokes';
+import BottomJokes from './components/BottomJokes';
 
 class App extends Component {
   constructor(props) {
@@ -21,8 +20,6 @@ class App extends Component {
       url: "https://icanhazdadjoke.com/",
       loadIndex: 0,
     }
-
-    this._handleReloadClick = this._handleReloadClick.bind(this);
   }
 
   componentDidMount() {
@@ -34,8 +31,7 @@ class App extends Component {
     const jokes = await this.loadJokes();
     var loadIndex = this.state.loadIndex;
     loadIndex++
-    this.setState({jokeList: jokes, loadIndex: loadIndex})
-    console.log("jokes list state updated")
+    this.setState({jokeList: jokes, loadIndex: loadIndex});
   }
 
   async loadJokes() {
@@ -44,7 +40,6 @@ class App extends Component {
     for (let i=0; i<jokes.length; i++) {
       var newJoke = await this.loadJoke();
       while(jokes.includes(newJoke)) {
-        console.log("duplicate joke found. Loading new joke.")
         newJoke = await this.loadJoke();
       }
       jokes[i] = newJoke
@@ -69,11 +64,10 @@ class App extends Component {
     return joke.data
   }
 
-  async _handleReloadClick() {
+  _handleReloadClick = () => {
     //load a new set of jokeID
     this.setState({jokeList: new Array(this.state.numberOfJokes)})
     this.createJokeList();
-    console.log('load new jokes click handled')
   }
 
   render() {
@@ -107,7 +101,9 @@ class App extends Component {
 
 function NewJokesButton(props) {
   return(
-    <button id="new-jokes-button" onClick={props.onClick}>Load new joke list</button>
+    <div className="button-container">
+      <button className="button" id="new-jokes-button" onClick={props.onClick}><span>New Jokes</span></button>
+    </div>
   )
 }
 

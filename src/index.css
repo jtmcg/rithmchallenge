@@ -23,14 +23,67 @@ code {
   padding-right: 10%;
   padding-top: 1%;
   padding-bottom: 1%;
+  display: inline-block;
+  border-bottom: solid black 1px;
 }
 
 #title {
   margin: 0px;
+  display: inline-block;
+  font-size: 48px;
+  margin-right: 10%;
+
 }
 
 #reload-button {
-  
+  display: inline-block;
+}
+
+.button-container {
+  margin: auto;
+}
+
+.button {
+  border-radius: 4px;
+  border: solid blue 4px;
+  width: 200px;
+  background-color: blue;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+  margin: 5px;
+  transition: 10ms;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 500ms;
+}
+
+.button span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  right: -20px;
+  transition: 500ms;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.button:active {
+  transform: scale(0.98);
+  transition: 5ms;
 }
 
 .body-container {
@@ -44,10 +97,21 @@ code {
 }
 
 .joke-card {
-  border: solid black 2px;
+  background-color: lightcyan;
   border-radius: 5px;
   padding: 1%;
   margin: 0.5%;
+  transition: 200ms;
+  box-shadow: 2px 2px 2px 2px gray;
+}
+
+.joke-card:hover {
+  transform: scale(1.01);
+  transition: 200ms;
+}
+
+.joke-text:hover {
+  cursor: pointer;
 }
 
 .vote-container {
@@ -61,12 +125,109 @@ code {
   display: inline-block;
 }
 
-#up-vote {
-  display: inline-block;
+.button-container {
+  margin: auto;
 }
 
-#up-vote span {
-  content: "\02713";
+.vote-button {
+  border-radius: 4px;
+  border: none;
+  width: 80px;
+  margin: 0px 5px 0px 5px;
+  color: white;
+  font-size: inherit;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: 10ms;
+  position: relative;
+}
+
+.vote-button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 500ms;
+  right: -6px;
+}
+
+.vote-button span:after {
+  opacity: 0;
+  transition: 500ms;
+}
+
+.vote-button:hover span {
+  right: 0px;
+}
+
+.vote-button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.vote-button:active {
+  transform: scale(0.95);
+  transition: 5ms;
+}
+
+#up-vote {
+  display: inline-block;
+  background-color: limegreen;
+  padding: 5px;
+}
+
+#up-vote span:after {
+  content: "\02714";
+  right: 0;
+}
+
+#up-vote-clicked {
+  display: inline-block;
+  background-color: limegreen;
+  padding: 5px;
+  margin: 0px 5px 0px 5px;
+  border-radius: 4px;
+  border: none;
+  width: 80px;
+  color: white;
+  font-size: inherit;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+#up-vote-clicked span:after {
+  content: "\02714";
+}
+
+#down-vote {
+  display: inline-block;
+  background-color: crimson;
+  padding: 5px;
+}
+
+#down-vote span:after {
+  content: "\02716";
+  right: 0;
+}
+
+#down-vote-clicked {
+  display: inline-block;
+  background-color: crimson;
+  padding: 5px;
+  margin: 0px 5px 0px 5px;
+  border-radius: 4px;
+  border: none;
+  width: 80px;
+  color: white;
+  font-size: inherit;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+#down-vote-clicked span:after {
+  content: "\02716";
 }
 
 .down-votes-container {
@@ -87,9 +248,15 @@ code {
 }
 
 .bottom-jokes {
+  background-color: crimson;
+  padding: 1%;
 }
 
 .top-jokes {
-
+  background-color: limegreen;
+  padding: 1%;
 }
 
+h3 {
+  margin-top: 0px;
+}
